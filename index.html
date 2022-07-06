@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="button" value="Inserir" onclick="inserir()" />
+    <input type="button" value="Login" onclick="login()" />
+
+    <script>
+      function login() {
+        
+        var c = document.cookie.split("; ");
+        for (i in c)
+          document.cookie =
+            /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+        let data = {
+          email: "a@a.com",
+          password: "123",
+        };
+
+        fetch("http://localhost:3000/auth/login", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }).then(function (response) {
+          response.json().then(function (json) {
+            console.log(json);
+            let token = "Token Login";
+            let valor = json.token;
+
+            document.cookie = token + "=" + (valor || "");
+          });
+        });
+      }
+
+      function inserir() {
+        let data = {
+          titulo: "Titulo 1",
+          editora: "Editora 2",
+          numeroPaginas: 20,
+          publicado: true,
+        };
+
+        fetch("http://localhost:3000/livro/", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzU4MGJiZThjZTBmZjE3NGJiOTcwMiIsImlhdCI6MTY1NzExMjEyOCwiZXhwIjoxNjU3MTk4NTI4fQ.MwRuxVgrDOyypQcX3pwC7RO0ISatrdxc5dV9Naq0zDU`,
+          },
+        }).then(function (response) {
+          response.json().then(function (json) {
+            console.log(json);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
