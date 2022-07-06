@@ -9,15 +9,10 @@
   <body>
     <input type="button" value="Inserir" onclick="inserir()" />
     <input type="button" value="Login" onclick="login()" />
+    <input type="button" value="Delete cookie" onclick="delete_cookie('Token Login')" />
 
     <script>
       function login() {
-        
-        var c = document.cookie.split("; ");
-        for (i in c)
-          document.cookie =
-            /^[^=]+/.exec(c[i])[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-
         let data = {
           email: "a@a.com",
           password: "123",
@@ -40,18 +35,20 @@
 
       function inserir() {
         let data = {
-          titulo: "Titulo 1",
-          editora: "Editora 2",
-          numeroPaginas: 20,
+          titulo: "AJKSHFKJHKJFAH",
+          editora: "TERA",
+          numeroPaginas: 212340,
           publicado: true,
         };
+
+        token = getCookie("Token Login");
 
         fetch("http://localhost:3000/livro/", {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
             "Content-type": "application/json; charset=UTF-8",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYzU4MGJiZThjZTBmZjE3NGJiOTcwMiIsImlhdCI6MTY1NzExMjEyOCwiZXhwIjoxNjU3MTk4NTI4fQ.MwRuxVgrDOyypQcX3pwC7RO0ISatrdxc5dV9Naq0zDU`,
+            Authorization: `Bearer ${token}`,
           },
         }).then(function (response) {
           response.json().then(function (json) {
@@ -59,6 +56,33 @@
           });
         });
       }
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+          let token = parts.pop().split(";").shift();
+          return token;
+        }
+      }
+
+      function get_cookie(name) {
+        return document.cookie.split(";").some((c) => {
+          return c.trim().startsWith(name + "=");
+        });
+      }
+
+      function delete_cookie(name, path, domain) {
+        if (get_cookie(name)) {
+          document.cookie =
+            name +
+            "=" +
+            (path ? ";path=" + path : "") +
+            (domain ? ";domain=" + domain : "") +
+            ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+        }
+      }
+
     </script>
   </body>
 </html>

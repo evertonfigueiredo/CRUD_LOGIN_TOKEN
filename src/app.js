@@ -5,7 +5,6 @@ import livroRouter from "./routes/livroRouter.js"
 import dotenv from "dotenv-safe"
 import cors from "cors"
 
-console.log("TESTE");
 dotenv.config()
 
 database.on("open", () => console.log("Conexão realizada com sucesso!"))
